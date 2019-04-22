@@ -1,0 +1,83 @@
+Given a string containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.
+
+An input string is valid if:
+
+Open brackets must be closed by the same type of brackets.
+Open brackets must be closed in the correct order.
+Note that an empty string is also considered valid.
+
+Example 1:
+
+Input: "()"
+Output: true
+
+Example 2:
+
+Input: "()[]{}"
+Output: true
+
+Example 3:
+
+Input: "(]"
+Output: false
+
+Example 4:
+
+Input: "([)]"
+Output: false
+
+Example 5:
+
+Input: "{[]}"
+Output: true
+--------------------------------------------------------------------------------------------------------------------------------
+方法一（用栈来解决）：(注意一些边界情况"}","}[")
+class Solution {
+    public boolean isValid(String s) {
+        if(s.length() == 0) return true;
+
+        Stack left = new Stack();
+        
+        for(int i = 0; i<s.length(); i++){
+            char c = s.charAt(i);
+            if(c == '(' || c == '{' || c == '['){
+                left.push(c);
+            }else if(c == ')' && left.top() == '('){
+                left.pop();
+            }else if(c == '}' && left.top() == '{'){
+                left.pop();
+            }else if(c == ']' && left.top() == '['){
+                left.pop();
+            }else {
+                return false;
+            }
+        }
+        if(left.isEmpty()) return true;
+        return false;
+    }
+    
+    class Stack{
+        List<Character> data = new ArrayList<>();
+        
+        public boolean isEmpty(){
+        
+            return data.isEmpty();
+        }
+        
+        public Character top(){
+            if(isEmpty()) return 'a';      //这里随便指定一个字符
+            return data.get(data.size()-1);
+        }
+        
+        public boolean pop(){
+            if(isEmpty()) return false;
+            
+            data.remove(data.size() - 1);
+            return true;
+        }
+        
+        public void push(char c){
+            data.add(c);
+        }
+    }
+}
