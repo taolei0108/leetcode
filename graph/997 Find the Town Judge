@@ -1,0 +1,120 @@
+In a town, there are N people labelled from 1 to N.  There is a rumor that one of these people is secretly the town judge.
+
+If the town judge exists, then:
+
+The town judge trusts nobody.
+Everybody (except for the town judge) trusts the town judge.
+There is exactly one person that satisfies properties 1 and 2.
+You are given trust, an array of pairs trust[i] = [a, b] representing that the person labelled a trusts the person labelled b.
+
+If the town judge exists and can be identified, return the label of the town judge.  Otherwise, return -1.
+
+ 
+
+Example 1:
+
+Input: N = 2, trust = [[1,2]]
+Output: 2
+
+
+Example 2:
+
+Input: N = 3, trust = [[1,3],[2,3]]
+Output: 3
+
+
+Example 3:
+
+Input: N = 3, trust = [[1,3],[2,3],[3,1]]
+Output: -1
+
+
+Example 4:
+
+Input: N = 3, trust = [[1,2],[2,3]]
+Output: -1
+
+
+Example 5:
+
+Input: N = 4, trust = [[1,3],[1,4],[2,3],[2,4],[4,3]]
+Output: 3
+ 
+
+Note:
+
+1 <= N <= 1000
+trust.length <= 10000
+trust[i] are all different
+trust[i][0] != trust[i][1]
+1 <= trust[i][0], trust[i][1] <= N
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+方法一（用hashmap记录出现的数字）：
+class Solution {
+    public int findJudge(int N, int[][] trust) {
+        if(N == 1) return 1;
+        Map<Integer, Integer> map = new HashMap();
+        //将所有的备选法官记录下来，包括他们的入度
+        for(int[] aaa: trust){
+            if(map.get(aaa[1]) == null){
+                map.put(aaa[1], 0);
+            }
+            int num = map.get(aaa[1]);
+            map.put(aaa[1], num+1);
+        }
+        
+        //移除相信别人的候选法官
+        for(int[] aaa: trust){
+            if(map.get(aaa[0]) != null){
+                map.remove(aaa[0]);
+            }
+        }
+        
+        // 当入度达到N-1时，就是最终的法官
+        for(int key : map.keySet()){
+            if(map.get(key) == N-1){
+                return key;
+            }
+        }
+        
+        return -1;
+    }
+}
+
+方法二：
+class Solution {
+    public int findJudge(int N, int[][] trust) {
+        int[][] people = new int[N][2];
+        for(int[] person : trust){
+            int out = person[0];
+            int in = person[1];
+            people[out - 1][0] ++;
+            people[in - 1][1] ++;
+        }
+        for(int i = 0; i < N; i ++){
+            if(people[i][0] == 0 && people[i][1] == N - 1)
+                return i + 1;
+        }
+        return -1;
+    }
+}
+用一个二维数组记录每个结点的入度和出度，出度为0入度为N-1的就是法官
+
+方法三：
+class Solution {
+    public int findJudge(int N, int[][] trust) {
+        int[] people = new int[N];
+        for(int[] aaa : trust){
+            people[aaa[1]-1] ++;
+            people[aaa[0]-1] --;
+        }
+        for(int i = 0; i < N; i ++){
+            if(people[i] == N - 1)
+                return i+1;
+        }
+        return -1;
+    }
+}
+和方法二相比很类似，但是更简便，用数组记录入度为N-1的值
