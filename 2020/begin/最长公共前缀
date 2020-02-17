@@ -42,3 +42,45 @@ class Solution(object):
                     return prefix
             prefix = first[:i]
         return prefix
+
+
+二分法查找：
+class Solution(object):
+    def longestCommonPrefix(self, strs):
+        """
+        :type strs: List[str]
+        :rtype: str
+        """
+        
+        if len(strs) == 0:
+            return ""
+        
+        if len(strs) == 1:
+            return strs[0]
+        
+        start = 1
+        end = sys.maxsize
+        for str in strs:
+            if len(str) < end:
+                end = len(str)
+        
+        
+        while start <= end:
+            half = (start + end) / 2
+            if self.compare(strs, half):
+                start = half + 1
+            else:
+                end = half - 1
+        
+        return strs[0][:end]
+
+    
+    def compare(self, strs, length):
+        prefix = strs[0][:length]
+        for str in strs[1:]:
+            if not str.startswith(prefix):
+                return False
+        
+        return True
+        
+Trie（前缀树）：
