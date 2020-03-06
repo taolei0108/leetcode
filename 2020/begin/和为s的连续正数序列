@@ -1,0 +1,65 @@
+输入一个正整数 target ，输出所有和为 target 的连续正整数序列（至少含有两个数）。
+
+序列内的数字由小到大排列，不同序列按照首个数字从小到大排列。
+
+ 
+
+示例 1：
+
+输入：target = 9
+输出：[[2,3,4],[4,5]]
+示例 2：
+
+输入：target = 15
+输出：[[1,2,3,4,5],[4,5,6],[7,8]]
+ 
+
+限制：
+
+1 <= target <= 10^5
+
+方法一，极限思想与等差数列，具体可以看题解：
+链接：https://leetcode-cn.com/problems/he-wei-sde-lian-xu-zheng-shu-xu-lie-lcof/solution/yong-shu-xue-fang-fa-deng-chai-shu-lie-he-ji-xian-/
+
+class Solution(object):
+
+
+    def findContinuousSequence(self, target):
+        
+        if target == 1 or target == 2:
+            return []
+
+        result = []
+        # 求出最大的正整数序列长度
+        maxlength = int(pow(2*target, 1.0/2))
+        for i in reversed(range(2, maxlength+1)):
+            m = float(2 * target + i - i*i) / (2 * i)
+            #判定m是否为正整数
+            if m - int(m) == 0:
+                result.append(list(range(int(m), int(m)+i)))
+
+
+        return result
+
+class Solution(object):
+
+
+    def findContinuousSequence(self, target):
+        
+        if target == 1 or target == 2:
+            return []
+
+        result = []
+        # 求出最大的正整数序列长度
+        maxlength = int(pow(2*target, 1.0/2))
+        for i in reversed(range(2, maxlength+1)):
+            m = float(2 * target + i - i*i) / (2 * i)
+            #判定m是否为正整数
+            if m - int(m) == 0:
+                result.append(list(range(int(m), int(m)+i)))
+
+
+        return result
+
+
+当然这题也可以用滑动窗口或者暴力法
