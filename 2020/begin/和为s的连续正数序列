@@ -41,25 +41,28 @@ class Solution(object):
 
         return result
 
+方法二：滑动窗口（双指针）：
+
 class Solution(object):
 
 
     def findContinuousSequence(self, target):
-        
-        if target == 1 or target == 2:
-            return []
-
+        """
+        :type target: int
+        :rtype: List[List[int]]
+        """
         result = []
-        # 求出最大的正整数序列长度
-        maxlength = int(pow(2*target, 1.0/2))
-        for i in reversed(range(2, maxlength+1)):
-            m = float(2 * target + i - i*i) / (2 * i)
-            #判定m是否为正整数
-            if m - int(m) == 0:
-                result.append(list(range(int(m), int(m)+i)))
-
+        R = 2
+        L = 1
+        while L < R and L <= target/2:
+            if (L+R)*(R-L+1)/2 == target:
+                result.append(list(range(L,R+1)))
+                L += 1
+                R += 1
+            elif (L+R)*(R-L+1)/2 < target:
+                R += 1
+            else:
+                L += 1
 
         return result
 
-
-当然这题也可以用滑动窗口或者暴力法
