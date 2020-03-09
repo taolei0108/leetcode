@@ -1,0 +1,35 @@
+看到书上讲背包问题用的动态规划的方法解决，采用了画个表格去填空的方法解决文图，每一行代表了一个商品，每一列代表一个x磅的背包，表格的最右下角就是最终的答案。
+于是想用代码去运用这种思想。
+
+题目：
+现在有一个背包只能装下4磅的东西。现在有几样商品，1磅的吉他价值1500$，2磅的iphone价值2500$，3磅的音响价值2000$，4磅的笔记本电脑价值3000$，问你怎么样装
+进背包的价值最大
+
+注：这里每样东西只有一样
+
+
+下面是代码：
+class Solution:
+
+    def maxvalue(self, d, w):
+        we = []
+        for i in range(1, len(d.keys())+1):
+            we.append([0]*(w+1))
+
+        i = 0
+        for k in d.keys():
+            if i == 0:
+                for j in range(k, w+1):
+                    we[i][j] = d[k]
+                i += 1
+                continue
+            for j in range(1, k):
+                we[i][j] = we[i-1][j]
+
+            for j in range(k, w+1):
+                we[i][j] = max(we[i-1][j], we[i-1][j-k]+d[k])
+            i += 1
+
+
+
+        return we[-1][-1]
