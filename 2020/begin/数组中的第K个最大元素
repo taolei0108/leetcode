@@ -39,3 +39,35 @@ class Solution(object):
  快速选择，本方法大致上与快速排序相同。
  简便起见，注意到第 k 个最大元素也就是第 N - k 个最小元素，因此可以用第 k 小算法来解决本问题。类似于快排，但是根据有所要获取的元素的下标确定需要继续
  排序哪一部分。
+class Solution(object):
+    def __init__(self):
+        self.num = 0
+
+    def findKthLargest(self, nums, k):
+        """
+        :type nums: List[int]
+        :type k: int
+        :rtype: int
+        """
+        index = len(nums) - k
+        self.quicksort(0, len(nums)-1, nums, index)
+        return self.num
+        
+
+    def quicksort(self, l, r, nums, index):
+        middle = nums[r]
+        
+        j = l
+        for i in range(l, r+1):
+            if nums[i] <= middle:
+                nums[i],nums[j] = nums[j],nums[i]
+                j += 1
+        
+        if j - 1 == index:
+            self.num = nums[index]
+        elif j - 1 > index:
+            self.quicksort(l, j-2, nums, index)
+        else:
+            self.quicksort(j, r, nums, index)
+
+方法三：堆排序，我这里就不写了，可以看题解
