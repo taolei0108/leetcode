@@ -1,0 +1,41 @@
+在未排序的数组中找到第 k 个最大的元素。请注意，你需要找的是数组排序后的第 k 个最大的元素，而不是第 k 个不同的元素。
+
+示例 1:
+
+输入: [3,2,1,5,6,4] 和 k = 2
+输出: 5
+示例 2:
+
+输入: [3,2,3,1,2,4,5,5,6] 和 k = 4
+输出: 4
+说明:
+
+你可以假设 k 总是有效的，且 1 ≤ k ≤ 数组的长度。
+
+方法一：
+快排，然后直接取得第k大元素，时间复杂度 O(nlogn)
+class Solution(object):
+    def findKthLargest(self, nums, k):
+        """
+        :type nums: List[int]
+        :type k: int
+        :rtype: int
+        """
+        self.quicksort(0, len(nums) - 1, nums)
+        return nums[len(nums) - k]
+
+    def quicksort(self, l, r, nums):
+        if l >= r: return
+        middle = nums[r]
+        i = l
+        for j in range(l, r + 1):
+            if nums[j] <= middle:
+                nums[j], nums[i] = nums[i], nums[j]
+                i += 1
+        self.quicksort(l, i - 2, nums)
+        self.quicksort(i, r, nums)
+        
+ 方法二：
+ 快速选择，本方法大致上与快速排序相同。
+ 简便起见，注意到第 k 个最大元素也就是第 N - k 个最小元素，因此可以用第 k 小算法来解决本问题。类似于快排，但是根据有所要获取的元素的下标确定需要继续
+ 排序哪一部分。
