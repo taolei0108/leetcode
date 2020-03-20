@@ -1,0 +1,59 @@
+输入整数数组 arr ，找出其中最小的 k 个数。例如，输入4、5、1、6、2、7、3、8这8个数字，则最小的4个数字是1、2、3、4。
+
+ 
+
+示例 1：
+
+输入：arr = [3,2,1], k = 2
+输出：[1,2] 或者 [2,1]
+示例 2：
+
+输入：arr = [0,1,2,1], k = 1
+输出：[0]
+ 
+
+限制：
+
+0 <= k <= arr.length <= 10000
+0 <= arr[i] <= 10000
+
+方法一：
+排序
+class Solution(object):
+
+    def getLeastNumbers(self, arr, k):
+        return sorted(arr)[:k]
+        
+
+方法二：
+快速选择法，建立在快排基础上，但是只排序k在的这部分
+class Solution(object):
+    def __init__(self):
+        self.rest = []
+
+    def getLeastNumbers(self, arr, k):
+        """
+        :type arr: List[int]
+        :type k: int
+        :rtype: List[int]
+        """
+        if k == 0 or not arr: return []
+        # if len(arr) == 1: return arr
+        self.quicksort(0,len(arr)-1,arr,k)
+        
+        return self.rest
+    
+    def quicksort(self, l, r, arr, k):
+        middle = arr[r]
+        j = l
+        for i in range(l,r+1):
+            if arr[i] <= middle:
+                arr[i],arr[j] = arr[j],arr[i]
+                j += 1
+        if j > k:
+            self.quicksort(l,j-2,arr,k)
+        elif j < k:
+            self.rest.extend(arr[l:j])
+            self.quicksort(j,r,arr,k)
+        elif j == k:
+            self.rest.extend(arr[l:j])
