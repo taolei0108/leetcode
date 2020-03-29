@@ -1,0 +1,81 @@
+给定一个单词列表，我们将这个列表编码成一个索引字符串 S 与一个索引列表 A。
+
+例如，如果这个列表是 ["time", "me", "bell"]，我们就可以将其表示为 S = "time#bell#" 和 indexes = [0, 2, 5]。
+
+对于每一个索引，我们可以通过从字符串 S 中索引的位置开始读取字符串，直到 "#" 结束，来恢复我们之前的单词列表。
+
+那么成功对给定单词列表进行编码的最小字符串长度是多少呢？
+
+ 
+
+示例：
+
+输入: words = ["time", "me", "bell"]
+输出: 10
+说明: S = "time#bell#" ， indexes = [0, 2, 5] 。
+ 
+
+提示：
+
+1 <= words.length <= 2000
+1 <= words[i].length <= 7
+每个单词都是小写字母 。
+
+方法一：
+前缀树，因为这题是后缀相同可以合并，所以可以将字符串反转后进行前缀树匹配
+class TrieNode:
+    def __init__(self):
+        self.chars = {}
+        self.end = False
+    
+    def put(self, c):
+        if not self.chars.has_key(c):
+            self.chars[c] = TrieNode()
+    
+    def setend(self):
+        self.end = True
+
+class Trie:
+    def __init__(self):
+        self.head = TrieNode()
+    
+    def put(self, word):
+        node = self.head
+        for c in word:
+            node.put(c)
+            node = node.chars[c]
+        
+        node.setend()
+
+class Solution(object):
+    def __init__(self):
+        self.nums = []
+
+    def minimumLengthEncoding(self, words):
+        """
+        :type words: List[str]
+        :rtype: int
+        """
+        if not words : return 0
+        trie = Trie()
+        for word in words:
+            trie.put(word[::-1])
+        
+        self.findmin(trie.head, 0)
+
+        length = 0
+        for num in self.nums:
+            length += num + 1
+        
+        return length
+        
+    def findmin(self, trienode, length):
+        if not trienode.chars: 
+            self.nums.append(length)
+            return
+
+        for k in trienode.chars.keys():
+            self.findmin(trienode.chars[k], length+1)
+            
+            
+ 当然也可以直接暴力匹配
