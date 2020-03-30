@@ -1,0 +1,74 @@
+0,1,,n-1这n个数字排成一个圆圈，从数字0开始，每次从这个圆圈里删除第m个数字。求出这个圆圈里剩下的最后一个数字。
+
+例如，0、1、2、3、4这5个数字组成一个圆圈，从数字0开始每次删除第3个数字，则删除的前4个数字依次是2、0、4、1，因此最后剩下的数字是3。
+
+ 
+
+示例 1：
+
+输入: n = 5, m = 3
+输出: 3
+示例 2：
+
+输入: n = 10, m = 17
+输出: 2
+ 
+
+限制：
+
+1 <= n <= 10^5
+1 <= m <= 10^6
+
+方法一：
+环链表
+class Chain:
+    def __init__(self, value):
+        self.next = None
+        self.value = value
+
+
+class Solution(object):
+    def lastRemaining(self, n, m):
+        """
+        :type n: int
+        :type m: int
+        :rtype: int
+        """
+        if n == 1 or m == 1: return n - 1
+        head = Chain(0)
+        node = head
+        for i in range(1, n):
+            node.next = Chain(i)
+            node = node.next
+        node.next = head
+
+        count = n
+        before = node
+        while count != 1:
+            temp = head
+            
+            for j in range((m-1)%count):
+                before = temp
+                temp = temp.next
+            before.next = temp.next
+            head = temp.next
+            count -= 1
+
+        return head.value
+        
+方法二：
+数学法，约瑟夫环
+剩下的最后一个数它的下标肯定为0，那上一个它的下标肯定是 (0+m)%1，再下次就是 ((0+m)%1 + m)%2，不断依次往前推。
+
+class Solution(object):
+    def lastRemaining(self, n, m):
+        """
+        :type n: int
+        :type m: int
+        :rtype: int
+        """
+        ans = 0
+        for i in range(1,n):
+            ans = (ans + m) % (i+1)
+        
+        return ans
