@@ -1,0 +1,52 @@
+给你一个字符串 S、一个字符串 T，请在字符串 S 里面找出：包含 T 所有字符的最小子串。
+
+示例：
+
+输入: S = "ADOBECODEBANC", T = "ABC"
+输出: "BANC"
+说明：
+
+如果 S 中不存这样的子串，则返回空字符串 ""。
+如果 S 中存在这样的子串，我们保证它是唯一的答案。
+
+方法一：
+暴力法，找出所有的子字符串，然后一一对比，当然也可以优化，比T长度大的子字符串才对比，从最小长度开始对比。
+
+方法二：
+滑动窗口，主要思想就是先滑动找出一个满足条件的最大子字符串，然后左窗口不断右滑，找出最小满足的字符串。然后左节点再滑一位，就会不满足条件，这时候
+右节点继续滑，直到再滑到满足条件，重复上面步骤。直到右节点到最后一位，且窗口不符合条件为止。
+class Solution(object):
+    def minWindow(self, s, t):
+        length = len(t)
+        distance = 0
+        goalt = {}
+        goals = {}
+        minlength = float("inf")
+        ans = ""
+        for c in t:
+            if not goalt.has_key(c):
+                goalt[c] = 0
+                goals[c] = 0
+            goalt[c] += 1
+        i, j = 0, 0
+
+        while i <= j:
+            if distance < length:
+                if j == len(s):
+                    return ans
+                if s[j] in goalt:
+                    if goalt[s[j]] > goals[s[j]]:
+                        distance += 1
+                    goals[s[j]] += 1
+                j += 1
+            else:
+                while distance == length:
+                    if j - i < minlength:
+                        ans = s[i:j]
+                        minlength = j - i
+
+                    if s[i] in goals:
+                        goals[s[i]] -= 1
+                        if goals[s[i]] < goalt[s[i]]:
+                            distance -= 1
+                    i += 1
